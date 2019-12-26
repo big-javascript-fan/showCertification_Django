@@ -33,6 +33,9 @@
               url: '/getcert?domain=' + url,
               type: "GET",
               success: function(res) {
+                console.log(res);
+                if(res.status == "failed")
+                  alert("invalid ssl");
                 $("#common-name").html(res.commonname);
                 $("#issued-by").html(res.issuer);
                 $("#cert-from").html(res.notbefore);

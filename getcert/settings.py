@@ -25,7 +25,7 @@ SECRET_KEY = 'h-j7q&9ohzi*3*r)_g115mxndo@bn42vyqx&t7jnb=9z&u#0z^'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['getcertapp.herokuapp.com', 'localhost']
+ALLOWED_HOSTS = ['getcertapp.herokuapp.com']
 
 
 # Application definition

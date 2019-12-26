@@ -11,6 +11,8 @@ from socket import socket
 from collections import namedtuple
 import concurrent.futures
 
+import requests
+
 HostInfo = namedtuple(field_names='cert hostname peername', typename='HostInfo')
 
 # Create your views here.
@@ -63,15 +65,20 @@ def get_issuer(cert):
     except x509.ExtensionNotFound:
         return None
 
-def index(request):
+def index(req):
   template = loader.get_template('cert/index.html')
   context = {}
-  return HttpResponse(template.render(context, request))
+  return HttpResponse(template.render(context, req))
 
-def getCert(request):
-  if request.method == 'GET':
-    domain = request.GET.get('domain')
-    with concurrent.futures.ThreadPoolExecutor(max_workers=4) as e:
-      for hostinfo in e.map(lambda x: get_certificate(x[0], x[1]), [(domain, 443)]):
-        certInfo = hostinfo
-    return JsonResponse({"Status": "Success",  "commonname": get_common_name(certInfo.cert), "issuer": get_issuer(certInfo.cert), "notbefore": certInfo.cert.not_valid_before, "notafter": certInfo.cert.not_valid_after})
+def getCert(req):
+  if req.method == 'GET':
+    domain = req.GET.get('domain')
+    try:
+      request = requests.get("https://" + domain, timeout=1)
+      if request.status_code == 200:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=4) as e:
+          for hostinfo in e.map(lambda x: get_certificate(x[0], x[1]), [(domain, 443)]):
+            certInfo = hostinfo
+        return JsonResponse({"status": "success",  "commonname": get_common_name(certInfo.cert), "issuer": get_issuer(certInfo.cert), "notbefore": certInfo.cert.not_valid_before, "notafter": certInfo.cert.not_valid_after})
+    except:
+      return JsonResponse({"status": "failed"})
