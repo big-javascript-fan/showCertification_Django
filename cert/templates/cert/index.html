@@ -2,6 +2,11 @@
   <head>
     <title>Certification Info</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <style type="text/css">
+      .font-bold {
+        font-weight: bold;
+      }
+    </style>
   </head>
   <bod>
     <div>
@@ -9,10 +14,10 @@
       <input type="text" id="site-url-input">
       <br/>
       <div>
-        <p><span style="font-weight: bold;">Common Name</span> : <span id="common-name"></span></p>
-        <p><span style="font-weight: bold;">Issued By</span> : <span id="issued-by"></span></p>
-        <p><span style="font-weight: bold;">From</span> : <span id="cert-from"></span></p>
-        <p><span style="font-weight: bold;">To</span> : <span id="cert-to"></span></p>
+        <p><span class="font-bold">Common Name</span> : <span id="common-name"></span></p>
+        <p><span class="font-bold">Issued By</span> : <span id="issued-by"></span></p>
+        <p><span class="font-bold">From</span> : <span id="cert-from"></span></p>
+        <p><span class="font-bold">To</span> : <span id="cert-to"></span></p>
       </div>
     </div>
     <script>
@@ -33,7 +38,6 @@
               url: '/getcert?domain=' + url,
               type: "GET",
               success: function(res) {
-                console.log(res);
                 if(res.status == "failed")
                   alert("invalid ssl");
                 $("#common-name").html(res.commonname);
